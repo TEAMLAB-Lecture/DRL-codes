@@ -1,0 +1,11 @@
+gymnasium>=0.28.1
+numpy>=1.24.0
+pygame>=2.1.0
+imageio>=2.25.0
+imageio-ffmpeg>=0.4.7
+pyvirtualdisplay>=3.0
+tqdm>=4.64.1
+huggingface_hub>=0.16.4
+pyglet==1.5.1
+PyYAML==6.0
+matplotlib>=3.7.0 

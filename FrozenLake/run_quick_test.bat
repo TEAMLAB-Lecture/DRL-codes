@@ -1,0 +1,63 @@
+@echo off
+chcp 65001 > nul
+echo FrozenLake 강화학습 Docker 환경 빠른 테스트
+echo =======================================
+
+REM 명령줄 인수 확인
+set REBUILD=0
+set SAVE_VIDEOS=1
+if "%1"=="rebuild" set REBUILD=1
+if "%1"=="--rebuild" set REBUILD=1
+if "%1"=="-r" set REBUILD=1
+if "%1"=="--no-videos" set SAVE_VIDEOS=0
+if "%1"=="-nv" set SAVE_VIDEOS=0
+if "%2"=="--no-videos" set SAVE_VIDEOS=0
+if "%2"=="-nv" set SAVE_VIDEOS=0
+
+REM 이미지가 존재하는지 확인
+docker image inspect frozen-lake-rl >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo Docker 이미지를 빌드합니다...
+    docker build --progress=plain -t frozen-lake-rl .
+    if %ERRORLEVEL% NEQ 0 (
+        echo Docker 이미지 빌드에 실패했습니다.
+        echo 자세한 로그를 확인하려면 아무 키나 누르세요...
+        pause > nul
+        echo 빌드 로그를 다시 확인합니다...
+        docker build --no-cache --progress=plain -t frozen-lake-rl .
+        if %ERRORLEVEL% NEQ 0 (
+            echo 빌드 실패. 종료합니다.
+            pause
+            exit /b 1
+        ) else (
+            echo 두 번째 시도에서 빌드 성공!
+        )
+    ) else (
+        echo 빌드 성공!
+    )
+) else (
+    if %REBUILD%==1 (
+        echo Docker 이미지를 강제로 다시 빌드합니다...
+        docker build --no-cache --progress=plain -t frozen-lake-rl .
+        if %ERRORLEVEL% NEQ 0 (
+            echo Docker 이미지 빌드에 실패했습니다.
+            pause
+            exit /b 1
+        ) else (
+            echo 빌드 성공!
+        )
+    ) else (
+        echo Docker 이미지가 이미 존재합니다. 다시 빌드하려면 'run_quick_test.bat rebuild' 명령을 사용하세요.
+    )
+)
+
+REM 출력 디렉토리 생성
+if not exist output mkdir output
+
+echo 빠른 테스트 설정으로 실행 중...
+echo (에피소드: 1000, 평가 에피소드: 10)
+docker run -it --rm -v "%cd%\output:/app/output" -e EPISODES=1000 -e EVAL_EPISODES=10 -e EVAL_INTERVAL=100 -e SAVE_ALL_VIDEOS=%SAVE_VIDEOS% frozen-lake-rl
+
+echo.
+echo 테스트가 완료되었습니다.
+pause 
