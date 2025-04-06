@@ -102,6 +102,7 @@ def train(env_name="CartPole-v1", num_episodes=1000):
     
     agent = REINFORCEBaseline(state_dim, action_dim)
     episode_rewards = []
+    episode_losses = []  # loss 값을 저장할 리스트 추가
     
     # 비디오 저장 디렉토리 설정
     video_dir = "videos"
@@ -133,6 +134,7 @@ def train(env_name="CartPole-v1", num_episodes=1000):
         
         episode_return, baseline, loss = agent.update(states, actions, rewards)
         episode_rewards.append(episode_return)
+        episode_losses.append(loss)  # loss 값 저장
         
         if episode % 10 == 0:
             avg_reward = np.mean(episode_rewards[-10:])
@@ -154,6 +156,17 @@ def train(env_name="CartPole-v1", num_episodes=1000):
     plt.savefig(plot_path)
     plt.close()
     logger.info(f"Reward plot saved: {plot_path}")
+    
+    # Plot losses
+    plt.figure(figsize=(10, 5))
+    plt.plot(episode_losses)
+    plt.title("Episode Losses")
+    plt.xlabel("Episode")
+    plt.ylabel("Loss")
+    loss_plot_path = os.path.join(video_dir, f"losses_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png")
+    plt.savefig(loss_plot_path)
+    plt.close()
+    logger.info(f"Loss plot saved: {loss_plot_path}")
 
 if __name__ == "__main__":
     try:
