@@ -6,6 +6,17 @@
 
 ```
 .
+├── A3C/                    # A3C (Asynchronous Advantage Actor-Critic) 구현
+│   ├── a3c_pong.py        # A3C 알고리즘 구현
+│   ├── requirements.txt    # 필요한 패키지 목록
+│   ├── Dockerfile         # Docker 설정 파일
+│   ├── run.bat           # Docker 실행 스크립트 (Windows)
+│   ├── run.sh            # Docker 실행 스크립트 (Linux/Mac)
+│   └── output_a3c/       # 학습 결과 저장 디렉토리
+│       ├── models/       # 학습된 모델 저장
+│       ├── logs/         # 학습 로그 저장
+│       └── videos/       # 학습 과정 비디오 저장
+│
 ├── FrozenLake/             # FrozenLake 환경에서의 Q-Learning 구현
 │   ├── frozen_lake_qlearning.py  # Q-Learning 알고리즘 구현
 │   ├── requirements.txt     # 필요한 패키지 목록
@@ -46,7 +57,17 @@
 
 ## 구현된 알고리즘
 
-### 1. Q-Learning (FrozenLake)
+### 1. A3C (Asynchronous Advantage Actor-Critic)
+- 위치: [A3C/](A3C/)
+- 설명: A3C 알고리즘을 사용하여 Atari Pong 게임을 학습
+- 특징:
+  - 멀티프로세싱을 통한 비동기 학습
+  - Actor-Critic 아키텍처 사용
+  - 학습 과정 비디오 녹화
+  - Docker 컨테이너화 지원
+  - Windows/Linux/Mac 호환성
+
+### 2. Q-Learning (FrozenLake)
 - 위치: [FrozenLake/](FrozenLake/)
 - 설명: 테이블 기반 Q-Learning을 사용하여 FrozenLake 환경을 해결
 - 특징:
@@ -56,7 +77,7 @@
   - 다양한 실행 옵션 제공 (Docker, 간단 실행, 빠른 테스트)
   - Windows/Linux/Mac 호환성
 
-### 2. REINFORCE (CartPole)
+### 3. REINFORCE (CartPole)
 - 위치: [REINFORCE_CartPole/](REINFORCE_CartPole/)
 - 설명: REINFORCE 알고리즘을 사용하여 OpenAI Gym의 CartPole-v1 환경을 학습
 - 특징:
@@ -64,7 +85,7 @@
   - GPU 가속 지원
   - Docker 컨테이너화 지원
 
-### 3. 기본 REINFORCE
+### 4. 기본 REINFORCE
 - 위치: [REINFORCE/](REINFORCE/)
 - 설명: 기본적인 REINFORCE 알고리즘 구현
 - 특징:
@@ -72,7 +93,7 @@
   - 학습 과정 시각화 (GIF, MP4)
   - Docker 컨테이너화 지원
 
-### 4. REINFORCE with Baseline
+### 5. REINFORCE with Baseline
 - 위치: [REINFORCE_Baseline/](REINFORCE_Baseline/)
 - 설명: Baseline이 추가된 REINFORCE 알고리즘 구현
 - 특징:
@@ -83,7 +104,7 @@
 ## 공통 특징
 - 모든 프로젝트는 Docker를 통해 실행 가능
 - 필요한 패키지는 requirements.txt에 명시
-- 실행 스크립트(run.bat) 제공
+- 실행 스크립트(run.bat/run.sh) 제공
 
 ## 실행 방법
 각 프로젝트 디렉토리에서 다음 명령어를 실행:
@@ -93,13 +114,13 @@ docker build -t rl-project .
 docker run -it rl-project
 
 # 또는 직접 실행
-python main.py  # 또는 frozen_lake_qlearning.py
+python main.py  # 또는 프로젝트별 메인 파일
 ```
 
 ## 환경 요구사항
 - Python 3.6+
-- PyTorch (REINFORCE 프로젝트)
-- OpenAI Gym
+- PyTorch (REINFORCE, A3C 프로젝트)
+- OpenAI Gym/Gymnasium
 - NumPy
 - Matplotlib
 - Docker (선택사항) 
